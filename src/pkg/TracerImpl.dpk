@@ -1,0 +1,50 @@
+package TracerImpl;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO ON}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST ON}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$DESCRIPTION 'Tracer Datadog Impl'}
+{$RUNONLY}
+{$IMPLICITBUILD ON}
+
+requires
+  vcl,
+  TracerAPI,
+  IndySystem,
+  IndyProtocols,
+  IndyCore;
+
+contains
+  uObjectSender in '..\impl\uObjectSender.pas',
+  uTracerBasicDataImpl in '..\impl\uTracerBasicDataImpl.pas',
+  uTracerImpl in '..\impl\uTracerImpl.pas',
+  uTracerObjectSenderImpl in '..\impl\uTracerObjectSenderImpl.pas',
+  uTracerSpanImpl in '..\impl\uTracerSpanImpl.pas',
+  uTracerTraceImpl in '..\impl\uTracerTraceImpl.pas',
+  uTracerTraceListImpl in '..\impl\uTracerTraceListImpl.pas',
+  uTracerUtilImpl in '..\impl\uTracerUtilImpl.pas',
+  uTracerObjectTraceImpl in '..\impl\uTracerObjectTraceImpl.pas';
+
+end.

@@ -1,0 +1,60 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{8789B23F-5E3B-4F5F-BEC7-D7AB7154F310}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="pkg\TracerAPI.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="pkg\TracerImpl.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\demo\TracerDemo.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="TracerAPI">
+        <MSBuild Projects="pkg\TracerAPI.dproj"/>
+    </Target>
+    <Target Name="TracerAPI:Clean">
+        <MSBuild Projects="pkg\TracerAPI.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="TracerAPI:Make">
+        <MSBuild Projects="pkg\TracerAPI.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="TracerImpl">
+        <MSBuild Projects="pkg\TracerImpl.dproj"/>
+    </Target>
+    <Target Name="TracerImpl:Clean">
+        <MSBuild Projects="pkg\TracerImpl.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="TracerImpl:Make">
+        <MSBuild Projects="pkg\TracerImpl.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="TracerDemo">
+        <MSBuild Projects="..\demo\TracerDemo.dproj"/>
+    </Target>
+    <Target Name="TracerDemo:Clean">
+        <MSBuild Projects="..\demo\TracerDemo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="TracerDemo:Make">
+        <MSBuild Projects="..\demo\TracerDemo.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="TracerAPI;TracerImpl;TracerDemo"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="TracerAPI:Clean;TracerImpl:Clean;TracerDemo:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="TracerAPI:Make;TracerImpl:Make;TracerDemo:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
