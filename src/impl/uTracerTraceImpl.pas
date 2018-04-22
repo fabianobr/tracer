@@ -28,7 +28,7 @@ type
 
     function GenerateNewSpan(poObservedObject: TObject = nil): ISpan;
     procedure EndSpan(Value: ISpan; poException: Exception);
-    procedure EndActiveSpan(poException: Exception = nil);
+    function EndActiveSpan(poException: Exception = nil): ISpan;
 
     procedure setMinimumDurationThreshold(pnNanoSeconds: int64);
 
@@ -150,10 +150,11 @@ begin
   FoId := Value;
 end;
 
-procedure TTrace.EndActiveSpan(poException: Exception);
+function TTrace.EndActiveSpan(poException: Exception): ISpan;
 begin
   if ActiveSpan = nil then
     exit;
+  result := ActiveSpan;
   Endspan(ActiveSpan, poException);
 end;
 

@@ -68,6 +68,7 @@ type
 
     procedure PutMoreData(const psKey, psValue: string);
     procedure setMinimumDurationThreshold(pnNanoSeconds: int64);
+    function isDurationRelevant: boolean;
 
     property id: TTracerID read getId write setId;
     property Parent: ISpan read getParent write setParent;
@@ -115,15 +116,7 @@ procedure TSpan.EnrichData;
 begin
   if (not Assigned(FoObservedObject)) or (FoObservedObject = nil) then
     exit;
-{
-  try
-    FoMoreData.values['classname'] := FoObservedObject.ClassName;
-    if FoObservedObject is TComponent then
-      FoMoreData.values['name'] := TComponent(FoObservedObject).Name;
-  except
-    FoMoreData.values['name'] := 'Indefined';
-  end;
-}
+
 end;
 
 function TSpan.getBasicData: IBasicData;
@@ -188,18 +181,22 @@ begin
   result := FoTraceId;
 end;
 
+function TSpan.isDurationRelevant: boolean;
+var
+  nDuration: int64;
+begin
+  nDuration := DateTimeToUnixNanoTime(FinalTime, starttime);
+
+  result := nDuration >= FnMinimumDurationThreshold;
+end;
+
 function TSpan.Serialize: TSerialResult;
-  //const
-  //msg = '[[{%s, "trace_id": %d, "span_id": %d, "parent_id": %s, "name": "%s", "start": %d, "duration": %d %s}]]';
-  //msg = '{%s, "trace_id": %d, "span_id": %d, "parent_id": %s, "name": "%s", "start": %d, "duration": %d %s}';
 var
   i: integer;
   oSpan: ISpan;
   sLine: string;
-  //sBasicData: string;
   sParent: string;
   oChildSerial: TSerialResult;
-  //sMoreData: string;
   nStartTime: int64;
   nDuration: int64;
   oJson: TJsonObject;
@@ -207,14 +204,13 @@ var
   oBasicData: TSerialResult;
 begin
   result := TStringList.Create; //PC_OK
-
   oSpan := Self;
 
-  nDuration := DateTimeToUnixNanoTime(oSpan.FinalTime, oSpan.starttime);
-  nStartTime := DateTimeToUnixNanoTime(oSpan.starttime);
-
-  if nDuration > FnMinimumDurationThreshold then
+  if isDurationRelevant then
   begin
+    nDuration := DateTimeToUnixNanoTime(oSpan.FinalTime, oSpan.starttime);
+    nStartTime := DateTimeToUnixNanoTime(oSpan.starttime);
+
     sParent := 'null';
     if oSpan.Parent <> nil then
       sParent := IntToStr(oSpan.Parent.id);
@@ -251,8 +247,8 @@ begin
 
       sLine := oJson.toString;
     finally
-      FreeAndNil(oJson);
-      oJsonMeta.Free;
+      //FreeAndNil(oJsonMeta);
+      //FreeAndNil(oJson);
     end;
     result.add(sLine);
   end;
@@ -264,27 +260,6 @@ begin
     result.AddStrings(oChildSerial);
   end;
 end;
-
-{
-function TSpan.SerializeMoreData: string;
-var
-  i: integer;
-  oJson: TJsonObject;
-begin
-  if FoMoreData.Count = 0 then
-    result := '';
-  oJson := TJsonObject.Create();
-  try
-    for i := 0 to FoMoreData.Count - 1 do
-    begin
-      oJson.addpair(FoMoreData.Names[i], FoMoreData.Values[FoMoreData.Names[i]]);
-    end;
-    result := oJson.toString;
-  finally
-    FreeAndNil(oJson);
-  end;
-end;
-}
 
 procedure TSpan.PutMoreData(const psKey, psValue: string);
 begin

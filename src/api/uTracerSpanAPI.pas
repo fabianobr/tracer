@@ -64,6 +64,8 @@ type
     procedure PutMoreData(const psKey, psValue: string);
 
     procedure setMinimumDurationThreshold(pnNanoSeconds: int64);    
+
+    function isDurationRelevant: boolean;
   end;
 
 implementation

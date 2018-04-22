@@ -17,7 +17,7 @@ type
 
     function GenerateNewSpan(poObservedObject: TObject = nil): ISpan;
     procedure EndSpan(Value: ISpan; poException: Exception = nil);
-    procedure EndActiveSpan(poException: Exception = nil);
+    function EndActiveSpan(poException: Exception = nil): ISpan;
 
     procedure setActiveSpan(Value: ISpan);
     function getActiveSpan: ISpan;
